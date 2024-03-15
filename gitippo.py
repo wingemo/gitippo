@@ -10,10 +10,10 @@ import hashlib
 #    - HEAD (should contain "ref: refs/heads/main\n" for a new repository)
 def init_repo():
     try:
-        os.mkdir(".git")
-        os.mkdir(".git/objects")
-        os.mkdir(".git/refs")
-        with open(".git/HEAD", "w", encoding="utf-8") as write_head:
+        os.mkdir(".gitippo")
+        os.mkdir(".gitippo/objects")
+        os.mkdir(".gitippo/refs")
+        with open(".gitippo/HEAD", "w", encoding="utf-8") as write_head:
             write_head.write("ref: refs/heads/master\n")
         print("Successfully initialized git directory")
     except Exception as err:
@@ -29,7 +29,7 @@ def cat_file():
     blob_sha = sys.argv[3] 
 
     # Bygg sökvägen till blob-filen
-    object_path = f".git/objects/{blob_sha[0:2]}/{blob_sha[2:]}"
+    object_path = f".gitippo/objects/{blob_sha[0:2]}/{blob_sha[2:]}"
     
     # Läs innehållet från blob-filen
     with open(object_path, 'rb') as file:
@@ -60,9 +60,9 @@ def hash_object():
     hash = hashlib.sha1(file_content.encode("UTF-8")).hexdigest()
     contents = bytes(file_content, encoding="utf-8")
     contents = zlib.compress(contents)
-    os.mkdir(f".git/objects/{hash[:2]}")
+    os.mkdir(f".gitippo/objects/{hash[:2]}")
 
-    with open(f".git/objects/{hash[:2]}/{hash[2:]}", "wb") as file:
+    with open(f".gitippo/objects/{hash[:2]}/{hash[2:]}", "wb") as file:
         file.write(contents)
 
     print(hash)
@@ -103,7 +103,7 @@ def write_tree():
     tree_hash = hashlib.sha1(tree_content.encode()).hexdigest()
 
     # Skriv trädets innehåll till en fil med trädets hash som namn
-    tree_filename = os.path.join('.git', 'objects', tree_hash[:2], tree_hash[2:])
+    tree_filename = os.path.join('.gitippo', 'objects', tree_hash[:2], tree_hash[2:])
     os.makedirs(os.path.dirname(tree_filename), exist_ok=True)
     with open(tree_filename, 'w') as tree_file:
         tree_file.write(tree_content)
