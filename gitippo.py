@@ -111,18 +111,10 @@ def write_tree():
     return tree_hash
 
 def main():
-    command = sys.argv[1]
-    if command == "init":
-        init_repo()
-    elif command == "cat-file":
-        cat_file()
-    elif command == "hash-object":
-        hash_object()
-    elif command == "write-tree":
-        write_tree()
-    else:
-        raise RuntimeError(f"Unknown command #{command}")
-
-
-if __name__ == "__main__":
+    match sys.argv[1]:
+        case "cat-file"     : cat_file()
+        case "hash-object"  : hash_object()
+        case "init"         : init(args)
+        case _              : print("Bad command.")
+                                        
     main()
